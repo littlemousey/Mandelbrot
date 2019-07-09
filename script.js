@@ -1,23 +1,34 @@
 // default settings
-const mandelbrotImage = {};
-setMandelbrotImageSettings();
 const CANVAS_WIDTH = 700;
 const CANVAS_HEIGHT = 700;
 
-let myCanvas = document.createElement("canvas");
+// document elements
+const iterationsElement = document.getElementById("iterations");
+const xPlaneElement = document.getElementById("xplane");
+const yPlaneElement = document.getElementById("yplane");
+const magnificationElement = document.getElementById("magnificationFactor");
+const hueElement = document.getElementById("hue");
+
+// create object for mandelbrot properties
+const mandelbrotImage = {};
+setMandelbrotImageSettings();
+
+// create canvas
+const myCanvas = document.createElement("canvas");
 myCanvas.width = CANVAS_WIDTH;
 myCanvas.height = CANVAS_HEIGHT;
+myCanvas.addEventListener("mousedown", function(e) {
+  getCursorPosition(myCanvas, e);
+});
 document.querySelector(".content").appendChild(myCanvas);
 const ctx = myCanvas.getContext("2d");
 
 function setMandelbrotImageSettings() {
-  mandelbrotImage.MAX_ITERATIONS = document.getElementById("iterations").value;
-  mandelbrotImage.magnificationFactor = document.getElementById(
-    "magnificationFactor"
-  ).value;
-  mandelbrotImage.panX = document.getElementById("xplane").value;
-  mandelbrotImage.panY = document.getElementById("yplane").value;
-  mandelbrotImage.hue = document.getElementById("hue").value;
+  mandelbrotImage.MAX_ITERATIONS = iterationsElement.value;
+  mandelbrotImage.magnificationFactor = magnificationElement.value;
+  mandelbrotImage.panX = parseFloat(xPlaneElement.value);
+  mandelbrotImage.panY = parseFloat(yPlaneElement.value);
+  mandelbrotImage.hue = hueElement.value;
 }
 
 function drawCanvas() {
@@ -68,6 +79,39 @@ function checkIfBelongsToMandelbrotSet(x, y) {
     }
   }
   return 0; // in Mandelbrot set
+}
+
+function getCursorPosition(canvas, event) {
+  const rect = canvas.getBoundingClientRect(); //  size of an element and its position relative to the viewport
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  console.log("x: " + x + " y: " + y);
+  mandelbrotImage.magnificationFactor =
+    parseInt(mandelbrotImage.magnificationFactor) + 50;
+  setUIElementsValue(x, y, mandelbrotImage.magnificationFactor);
+  drawCanvas();
+}
+
+function setUIElementsValue(x, y, magnification) {
+  const xNormalized = normalize(x, parseFloat(xPlaneElement.value));
+  const yNormalized = normalize(y, parseFloat(yPlaneElement.value));
+  xPlaneElement.value = xNormalized;
+  mandelbrotImage.panX = xNormalized;
+  yPlaneElement.value = yNormalized;
+  mandelbrotImage.panY = yNormalized;
+  magnificationElement.value = magnification;
+}
+
+function normalize(coordinate, value) {
+  let newValue;
+  const ratio = coordinate / CANVAS_WIDTH;
+  if (ratio < 0.5) {
+    newValue = value + 0.1;
+  } else {
+    newValue = value - 0.1;
+  }
+
+  return newValue;
 }
 
 function redrawCanvas() {

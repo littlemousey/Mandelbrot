@@ -23,14 +23,14 @@
         id="iterations"
       />
       <label for="x-axis">x-axis</label>
-      <input type="number" maxlength="3" value="2" name="x-axis" id="xplane" />
+      <input type="text" value="2" name="x-axis" id="xplane" />
       <label for="y-axis">y-axis</label>
-      <input type="number" maxlength="3" value="2" name="y-axis" id="yplane" />
+      <input type="text" value="2" name="y-axis" id="yplane" />
     </div>
     <div class="refresh-and-color">
       <label for="hue">Hue color</label>
-      <input type="number" maxlength="3" value="240" name="hue" id="hue" />
-      <button onclick="redrawCanvas()">Redraw</button>
+      <input type="range" min="0" max="360" value="240" name="hue" id="hue" />
+      <button onclick="redrawCanvas()">Apply changes</button>
     </div>
     <div class="content">
       <script src="script.js"></script>
