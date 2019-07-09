@@ -4,8 +4,35 @@
     <link href="styles.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
+    <h1>Mandelbrot</h1>
+    <div class="options">
+      <label for="magnificationFactor">Magnification factor</label>
+      <input
+        type="number"
+        maxlength="4"
+        value="200"
+        name="magnificationFactor"
+        id="magnificationFactor"
+      />
+      <label for="iterations">Maximum iterations</label>
+      <input
+        type="number"
+        maxlength="4"
+        value="60"
+        name="iterations"
+        id="iterations"
+      />
+      <label for="x-axis">x-axis</label>
+      <input type="number" maxlength="3" value="2" name="x-axis" id="xplane" />
+      <label for="y-axis">y-axis</label>
+      <input type="number" maxlength="3" value="2" name="y-axis" id="yplane" />
+    </div>
+    <div class="refresh-and-color">
+      <label for="hue">Hue color</label>
+      <input type="number" maxlength="3" value="240" name="hue" id="hue" />
+      <button onclick="redrawCanvas()">Redraw</button>
+    </div>
     <div class="content">
-      <h1>Mandelbrot</h1>
       <script src="script.js"></script>
     </div>
   </body>

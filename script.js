@@ -1,39 +1,54 @@
-const MAX_ITERATIONS = 100;
-const magnificationFactor = 300;
-const panX = 2;
-const panY = 1.5;
+// default settings
+const mandelbrotImage = {};
+setMandelbrotImageSettings();
+const CANVAS_WIDTH = 700;
+const CANVAS_HEIGHT = 700;
 
-function createMandelbrot(width, height) {
-  // Create Canvas
-  let myCanvas = document.createElement("canvas");
-  myCanvas.width = width;
-  myCanvas.height = height;
-  document.querySelector(".content").appendChild(myCanvas);
-  let ctx = myCanvas.getContext("2d");
+let myCanvas = document.createElement("canvas");
+myCanvas.width = CANVAS_WIDTH;
+myCanvas.height = CANVAS_HEIGHT;
+document.querySelector(".content").appendChild(myCanvas);
+const ctx = myCanvas.getContext("2d");
 
-  // Draws canvas
+function setMandelbrotImageSettings() {
+  mandelbrotImage.MAX_ITERATIONS = document.getElementById("iterations").value;
+  mandelbrotImage.magnificationFactor = document.getElementById(
+    "magnificationFactor"
+  ).value;
+  mandelbrotImage.panX = document.getElementById("xplane").value;
+  mandelbrotImage.panY = document.getElementById("yplane").value;
+  mandelbrotImage.hue = document.getElementById("hue").value;
+}
+
+function drawCanvas() {
   for (let x = 0; x < myCanvas.width; x++) {
     for (let y = 0; y < myCanvas.height; y++) {
       let belongsToSet = checkIfBelongsToMandelbrotSet(
-        x / magnificationFactor - panX,
-        y / magnificationFactor - panY
+        x / mandelbrotImage.magnificationFactor - mandelbrotImage.panX,
+        y / mandelbrotImage.magnificationFactor - mandelbrotImage.panY
       );
       if (belongsToSet == 0) {
         ctx.fillStyle = "#000";
         ctx.fillRect(x, y, 1, 1); // Draw a black pixel
       } else {
-        ctx.fillStyle = "hsl(240, 50%, " + belongsToSet + "%)"; // https://www.w3schools.com/cssref/func_hsl.asp
+        ctx.fillStyle = `hsl(${mandelbrotImage.hue}, 80%, ${belongsToSet}%)`; // https://www.w3schools.com/cssref/func_hsl.asp
         ctx.fillRect(x, y, 1, 1); // Draw a colorful pixel
       }
     }
   }
 }
 
+drawCanvas();
+
 function checkIfBelongsToMandelbrotSet(x, y) {
   let realComponentOfResult = x;
   let imaginaryComponentOfResult = y;
 
-  for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
+  for (
+    let iteration = 0;
+    iteration < mandelbrotImage.MAX_ITERATIONS;
+    iteration++
+  ) {
     // Calculate the real and imaginary components of the result
     // separately
     let tempRealComponent =
@@ -49,10 +64,13 @@ function checkIfBelongsToMandelbrotSet(x, y) {
 
     // not in Mandelbrot set
     if (realComponentOfResult * imaginaryComponentOfResult > 5) {
-      return (iteration / MAX_ITERATIONS) * 100;
+      return (iteration / mandelbrotImage.MAX_ITERATIONS) * 100;
     }
   }
   return 0; // in Mandelbrot set
 }
 
-createMandelbrot(800, 800);
+function redrawCanvas() {
+  setMandelbrotImageSettings();
+  drawCanvas();
+}
